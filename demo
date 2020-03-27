@@ -1,0 +1,217 @@
+import React from 'react';
+import ChatBot from 'react-simple-chatbot';
+import Review from './Review.js';
+import './Homepage.css';
+import images from './images.js';
+import {
+  BrowserRouter as Router,
+  Switch,
+  Route,
+  Link
+} from "react-router-dom";
+   
+class Homepage extends React.Component {
+    constructor(props) {
+        super(props);
+    
+        this.state = {
+          
+          name: '',
+          gender: '',
+          age: '',
+          symptums: '',
+          more_symptums: '',
+          travel_history: '',
+          conditions: '',
+          symptoms_progress: '',
+        };
+      }
+
+    
+    render() {
+
+        return (
+            <div class="sheet">
+                <div class="box">
+                    <ChatBot
+                            className = "chatbot"
+                            headerTitle="CORONAVIRUS RISK SCAN"
+                            recognitionEnable={true}
+                            // botAvatar = ''
+                            enableSmoothScroll = 'true'
+                            // width ='500px'
+                            // userIcon={images.UserIcon}
+                            botAvatar={images.CPUIcon}
+                            // avatarStyle = "height : 200px"
+                            steps={[
+                                {
+                                    id: '1',
+                                    message: `Hi! Our coronavirus disease self assessment scan has been developed on the basis of guidelines from the WHO and MHFW,Government of India. 
+                                    This interaction should not be taken as expert medical advice. 
+                                    Any information you share with us will be kept strictly confidential.`,
+                                    trigger: '2',
+                                },
+                                {
+                                    id: '2',
+                                    message: 'What is your name?',
+                                    trigger: 'name',
+                                },
+                                {
+                                    id: 'name',
+                                    user: true,
+                                    validator: (value) => {
+                                        var regex=/^[a-zA-Z]+$/;
+                                        if (!value.match(regex))
+                                        {
+                                          return 'Name must be input String';
+                                        } 
+                                        return true;
+                                      },
+                                    trigger: '3',
+                                },
+                                {
+                                    id: '3',
+                                    message: 'Hi {previousValue}, How old are you?',
+                                    trigger: 'age',
+                                },
+                                {
+                                  id: 'age',
+                                  user: true,
+                                  trigger: '5',
+                                  validator: (value) => {
+                                    if (isNaN(value)) {
+                                      return 'age must be a number';
+                                    } else if (value < 0) {
+                                      return 'age must be positive';
+                                    } else if (value > 120) {
+                                      return `${value}? Come on!`;
+                                    }
+                                    return true;
+                                  },
+                                },
+                                {
+                                  id: '5',
+                                  message: `Please let us know your current body temperature in degree Fahrenheit 
+                                  (Normal body temperature is 98.6°F):`,
+                                  trigger: 'body_temp',
+                                },
+                                {
+                                  id: 'body_temp',
+                                  options: [
+                                    { value: 'Normal (96°F-98.6°F)', label: 'Normal (96°F-98.6°F)',trigger: '6'},
+                                    { value: 'Fever (98.6°F-102°F)', label: 'Fever (98.6°F-102°F)',trigger: '6'},
+                                    { value: 'High Fever (>102°F)', label: 'High Fever (>102°F)',trigger: '6'},
+                                    { value: `Don't know`, label: `Don't know`, trigger: '6' },
+                                  ],
+                                },
+                               
+                                {
+                                  id: '6',
+                                  message: `Select No of symptums which you experiencing below- 
+                                  Dry Cough, Sneezing, Sore Throat `,
+                                  trigger: 'symptums'
+                                },
+                                {
+                                  id: 'symptums',
+                                  options: [
+                                    { value: '0', label: '0', trigger: '7' },
+                                    { value: '1', label: '1', trigger: '7' },
+                                    { value: '2', label: '2', trigger: '7' },
+                                    { value: '3', label: '3', trigger: '7' },
+                                  ],
+                                },
+                                {
+                                  id: '7',
+                                  message: `Additionally, please Select No of Symptums if you are experiencing any below-
+                                  Difficulty in Breathing, Drowsiness, Severe Weakness, Persistant Pain and Pressure in Chest`,
+                                  trigger: 'more_symptums'
+                                },
+                                {
+                                  id: 'more_symptums',
+                                  options: [
+                                    { value: '0', label: '0', trigger: '8' },
+                                    { value: '1', label: '1', trigger: '8' },
+                                    { value: '2', label: '2', trigger: '8' },
+                                    { value: '3', label: '3', trigger: '8' },
+                                  ],
+                                },
+                                {
+                                    id: '8',
+                                    message: `Please select your travel and exposure details`,
+                                    trigger: 'travel_history',
+                                },
+                                {
+                                    id: 'travel_history',
+                                    options: [
+                                      { value: 'No Travel History',                                                          label: 'No Travel History',                                                          trigger: '9' },
+                                      { value: 'No contact with anyone with Symptoms',                                       label: 'No contact with anyone with Symptoms',                                       trigger: '9' },
+                                      { value: 'History of travel in affected geographical area in last 14 days', label: 'History of travel in affected geographical area in last 14 days', trigger: '9' },
+                                      { value: 'Close contact with confirmed COVID in last 14 days',                         label: `Close contact with confirmed COVID in last 14 days`,                         trigger: '9' }
+                                    ],
+                                },
+                                {
+                                    id: '9',
+                                    message: `select No of Conditions if you have a history with any below conditions-
+                                    Diabetes, High Blood Pressure, Heart Disease, Kidney Disease, Lung Disease, stroke, Reduced Immunity`,
+                                    trigger: 'conditions',
+                                },
+                                {
+                                    id: 'conditions',
+                                    options: [
+                                      { value: '0', label: `0`, trigger: '10' },
+                                      { value: '1', label: '1', trigger: '10' },
+                                      { value: '2', label: '2', trigger: '10' },
+                                      { value: '3', label: '3', trigger: '10' },
+                                      { value: '4', label: `4`, trigger: '10' },
+                                      { value: '5', label: `5`, trigger: '10' },
+                                      { value: '6', label: `6`, trigger: '10' },
+                                      { value: '7', label: `7`, trigger: '10' },
+                                    ],
+                                },
+                                {
+                                    id: '10',
+                                    message: `How have your symptoms Progressed over the last 48 hrs?`,
+                                    trigger: 'symptoms_progress',
+                                },
+                                {
+                                    id: 'symptoms_progress',
+                                    options: [
+                                      { value: 'Improved',              label: 'Improved',              trigger: 'review' },
+                                      { value: 'No Change',             label: 'No Change',             trigger: 'review' },
+                                      { value: 'Worsened',              label: 'Worsened',              trigger: 'review' },
+                                      { value: 'Worsened Considerably', label: `Worsened Considerably`, trigger: 'review' }
+                                    ],
+                                },
+                                {
+                                  id: 'review',
+                                  component: <Review/>,
+                                  asMessage: true,
+                                  trigger: 'end-message',
+                                },
+                                {
+                                  id: 'end-message',
+                                  component: (
+                                   
+                                    
+                                      <button>
+                                        <Link to="/">
+                                          Go Corona Go
+                                        </Link>
+                                      </button>
+                                  
+                                  
+                                    // {/* <a href="https://www.w3schools.com">Thanks!.....Visit W3Schools.com!</a> */}
+                                   
+                                  ),
+                                  end: true,
+                                },
+                            ]}
+                        />
+                </div>,
+            </div>
+        );
+    }
+}
+
+
+export default Homepage;
